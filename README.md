@@ -1,2 +1,2 @@
 # SSRPlus-Mod
-Collection of Lean‘s SSR+ Mod
+Version 1.1-101
