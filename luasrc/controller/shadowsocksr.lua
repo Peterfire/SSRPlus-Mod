@@ -23,9 +23,10 @@ function index()
 
 		entry({"admin", "services", "shadowsocksr", "advanced"},cbi("shadowsocksr/advanced"),_("Advanced Settings"), 50).leaf = true
 
-		if nixio.fs.access("/usr/bin/ssr-server") and nixio.fs.access("/usr/bin/ss-server") and nixio.fs.access("/usr/bin/v2ray/v2ray") then
-			entry({"admin", "services", "shadowsocksr", "server"},arcombine(cbi("shadowsocksr/server"), cbi("shadowsocksr/server-config")),_("SSR Server"), 60).leaf = true
-		end
+		  if nixio.fs.access("/usr/bin/ssr-server") then
+        entry({"admin", "services", "shadowsocksr", "server"},arcombine(cbi("shadowsocksr/server"), cbi("shadowsocksr/server-config")),_("SSR Server"),60).leaf = true
+    end
+   
 	
 		entry({"admin", "services", "shadowsocksr", "status"},form("shadowsocksr/status"),_("Status"), 70).leaf = true
 

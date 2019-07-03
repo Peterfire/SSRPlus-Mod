@@ -1,2 +1,3 @@
-# SSRPlus-Mod
-Version 1.1-101
+# luci-app-ssr-plus
+
+Version 1.11-108

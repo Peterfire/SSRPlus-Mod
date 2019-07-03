@@ -38,9 +38,17 @@ o.description = translate("Through proxy update list, Not Recommended ")
 o = s:option(Button,"update",translate("Update"))
 o.inputstyle = "reload"
 o.write = function()
-  luci.sys.call("bash /usr/share/shadowsocksr/subscribe.sh >>/tmp/ssrplus.log 2>&1")
-  luci.http.redirect(luci.dispatcher.build_url("admin", "services", "shadowsocksr", "servers"))
+    luci.sys.call("/usr/share/shadowsocksr/subscribe.sh >/www/check_update.htm")
+        luci.sys.call("bash /usr/share/shadowsocksr/subscribe.sh >>/tmp/ssrplus.log 2>&1")
+    luci.sys.exec("sleep 2")
+    luci.http.redirect(luci.dispatcher.build_url("admin", "services", "shadowsocksr", "servers"))
 end
+
+
+
+o = s:option(DummyValue, "", "")
+o.rawhtml = true
+o.template = "shadowsocksr/update_subscribe"
 
 o = s:option(Button,"delete",translate("Delete all severs"))
 o.inputstyle = "reset"
@@ -52,7 +60,7 @@ o.write = function()
 end
 
 -- [[ Servers Manage ]]--
-s = m:section(TypedSection, "servers")
+s = m:section(TypedSection, "servers",translate("Servers List"))
 s.anonymous = true
 s.addremove = true
 s.sortable = false
@@ -65,26 +73,22 @@ function s.create(...)
 		return
 	end
 end
+o = s:option(DummyValue, "alias", translate("Aliasd"))
+o.width="15%"
+
 
 o = s:option(DummyValue, "type", translate("Type"))
-function o.cfgvalue(...)
-	return Value.cfgvalue(...) or translate("")
-end
+o.width="10%"
 
-o = s:option(DummyValue, "alias", translate("Alias"))
-function o.cfgvalue(...)
-	return Value.cfgvalue(...) or translate("None")
-end
 
 o = s:option(DummyValue, "server", translate("Server Address"))
-function o.cfgvalue(...)
-	return Value.cfgvalue(...) or "?"
-end
+o.width="15%"
 
 o = s:option(DummyValue, "server_port", translate("Server Port"))
-function o.cfgvalue(...)
-	return Value.cfgvalue(...) or "?"
-end
+o.width="10%"
+
+
+
 
 if nixio.fs.access("/usr/bin/ssr-kcptun") then
 
@@ -100,13 +104,18 @@ function o.cfgvalue(...)
 	return Value.cfgvalue(...) or "0"
 end
 
+
 o = s:option(DummyValue, "weight", translate("weight"))
 function o.cfgvalue(...)
 	return Value.cfgvalue(...) or "0"
 end
 
+
 o = s:option(DummyValue,"server",translate("Ping Latency"))
 o.template="shadowsocksr/ping"
+o.width="10%"
+
+
 m:append(Template("shadowsocksr/server_list"))
 
 
