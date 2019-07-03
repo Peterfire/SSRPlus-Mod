@@ -105,10 +105,7 @@ function o.cfgvalue(...)
 end
 
 
-o = s:option(DummyValue, "weight", translate("weight"))
-function o.cfgvalue(...)
-	return Value.cfgvalue(...) or "0"
-end
+
 
 
 o = s:option(DummyValue,"server",translate("Ping Latency"))

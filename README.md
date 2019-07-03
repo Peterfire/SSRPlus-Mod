@@ -1,3 +1,3 @@
 # luci-app-ssr-plus
 
-Version 1.11-108
+Version 1.11-110

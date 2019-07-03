@@ -44,13 +44,19 @@ function act_status()
     local e={}
     --全局服务器
     e.global=luci.sys.call("ps -w | grep ssr-retcp | grep -v grep >/dev/null") == 0  
-    --检测PDNSD状态
+   --检测PDNSD状态
 	if tonumber(luci.sys.exec("ps -w | grep pdnsd |grep -v grep| wc -l"))>0 then
 		e.pdnsd= true
 	elseif tonumber(luci.sys.exec("ps -w | grep dnsparsing |grep -v grep| wc -l"))>0 then
 		e.pdnsd= true
 	elseif tonumber(luci.sys.exec("ps -w | grep dnscrypt-proxy |grep -v grep| wc -l"))>0 then
 		e.pdnsd= true
+              elseif tonumber(luci.sys.exec("ps -w | grep dns-forwarder |grep -v grep| wc -l"))>0 then
+		e.pdnsd= true
+               elseif tonumber(luci.sys.exec("ps -w | grep dnsforwarder |grep -v grep| wc -l"))>0 then
+		e.pdnsd= true
+
+
 	end
     --检测SOCKS5状态
 	if tonumber(luci.sys.exec("ps -w | grep ssr-local |grep -v grep| wc -l"))>0 then

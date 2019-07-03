@@ -30,7 +30,7 @@ if nixio.fs.access("/etc/china_ssr.txt") then
  ip_count = sys.exec("cat /etc/china_ssr.txt | wc -l")
 end
 
-m = Map(shadowsocksr, translate("ShadowSocksR Plus+ Settings"))
+m = Map(shadowsocksr)
 
 m:section(SimpleSection).template  = "shadowsocksr/status"
 
@@ -50,7 +50,7 @@ end
 
 table.sort(key_table)  
 -- [[ Global Setting ]]--
-s = m:section(TypedSection, "global",translate("服务器设置"))
+s = m:section(TypedSection, "global",translate("ShadowSocksR Plus+ Settings"))
 s.anonymous = true
 
 
@@ -82,8 +82,14 @@ o:value("oversea", translate("Oversea Mode"))
 o.default = router
 
 o = s:option(ListValue, "pdnsd_enable", translate("Resolve Dns Mode"))
-o:value("1", translate("Use Pdnsd tcp query and cache"))
 o:value("0", translate("Use Local DNS Service listen port 5335"))
+o:value("1", translate("Use Pdnsd tcp query and cache"))
+if nixio.fs.access("/usr/bin/dnscrypt-proxy") then
+o:value("2", translate("Use dnscrypt-proxy query and cache"))
+end
+if nixio.fs.access("/usr/bin/dnsforwarder") then
+o:value("3", translate("Use dnsforwarder tcp query and cache"))
+end
 o.default = 1
 
 o = s:option(ListValue, "tunnel_forward", translate("Anti-pollution DNS Server"))
@@ -101,6 +107,8 @@ o:value("1.1.1.1:53", translate("Cloudflare DNS (1.1.1.1)"))
 o:value("114.114.114.114:53", translate("Oversea Mode DNS-1 (114.114.114.114)"))
 o:value("114.114.115.115:53", translate("Oversea Mode DNS-2 (114.114.115.115)"))
 o:depends("pdnsd_enable", "1")
+o:depends("pdnsd_enable", "2")
+o:depends("pdnsd_enable", "3")
 
 
 
