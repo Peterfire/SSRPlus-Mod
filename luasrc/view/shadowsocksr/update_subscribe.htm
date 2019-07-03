@@ -1,0 +1,130 @@
+<%+cbi/valueheader%>
+<style>
+    .modals-bg{
+        position: fixed;
+        z-index: 90;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        background: rgba(0,0,0,0.8);
+        display: none;
+    }
+    .modals {
+        position: fixed;
+        z-index: 100;
+        width: 60%;
+        height: 500px;
+        background: rgba(0,0,0,0.8);
+        left: 20%;
+        top: 15%;
+        color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        /* Firefox */
+        -webkit-box-sizing: border-box;
+        /* Safari */
+    }
+
+    .modals h2 {}
+
+    .modals h3 {
+        font-size: 14px;
+        color: #ffcc00;
+        background: transparent;
+        margin: 0;
+        padding: 0;
+    }
+    @media screen and (max-width: 1024px) {
+        .modals {
+            position: fixed;
+            z-index: 100;
+            width: 80%;
+            height: 500px;
+            background: rgba(0,0,0,0.8);
+            left: 10%;
+            top: 15%;
+            color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+        }
+    }
+    @media screen and (max-width: 700px) {
+        .modals-bg{
+            position: fixed;
+            z-index: 100;
+
+        }
+        .modals {
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+        }
+    }
+</style>
+<script type="text/javascript">
+    //<![CDATA[
+    var _responseLen;
+    var noChange = 0;
+    var x = 5;
+    function update_subscribe() {
+        $(".modals-bg").show();
+        setTimeout("get_realtime_log();", 500);
+    }
+
+    var btn = document.getElementsByClassName("cbi-input-reload");
+    btn[0].addEventListener("click", function () {
+        update_subscribe()
+    }, false);
+
+    function get_realtime_log() {
+        $.ajax({
+            url: '/check_update.htm',
+            dataType: 'html',
+            error: function (xhr) {
+                setTimeout("get_realtime_log();", 1000);
+            },
+            success: function (response) {
+                var retArea = document.getElementById("log_content3");
+                if (response.search("XU6J03M6") != -1) {
+                    console.log(response);
+                    retArea.value = response;
+                    retArea.scrollTop = retArea.scrollHeight;
+                    x = 5;
+                    return true;
+                }
+                if (_responseLen == response.length) {
+                    noChange++;
+                } else {
+                    noChange = 0;
+                }
+                console.log(noChange);
+                if (noChange > 100) {
+                    return false;
+                } else {
+                    setTimeout("get_realtime_log();", 250);
+                }
+                retArea.value = response;
+                retArea.scrollTop = retArea.scrollHeight;
+                _responseLen = response.length;
+            },
+            error: function () {
+                setTimeout("get_realtime_log();", 500);
+            }
+        });
+    }
+//]]>
+</script>
+<div class="modals-bg">
+    <div class="modals">
+        <h2>SSR/V2ray 节点订阅</h2>
+        <h3 style="margin-left:0;">*请勿刷新本页面，正在订阅中 ...</h3>
+        <textarea cols="63" rows="28" wrap="on" readonly="readonly" id="log_content3" autocomplete="off" autocorrect="off" autocapitalize="off"
+                  spellcheck="false" style="border:0;width:99%; font-family:'Lucida Console'; font-size:12px; font-weight:bold;background:transparent;color:#FF0000;outline: none;padding-left:3px;padding-right:22px;overflow:hidden"></textarea>
+    </div>
+</div>
+
+<%+cbi/valuefooter%>
