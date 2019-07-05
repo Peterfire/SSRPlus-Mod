@@ -82,14 +82,8 @@ o:value("oversea", translate("Oversea Mode"))
 o.default = router
 
 o = s:option(ListValue, "pdnsd_enable", translate("Resolve Dns Mode"))
-o:value("0", translate("Use Local DNS Service listen port 5335"))
 o:value("1", translate("Use Pdnsd tcp query and cache"))
-if nixio.fs.access("/usr/bin/dnscrypt-proxy") then
-o:value("2", translate("Use dnscrypt-proxy query and cache"))
-end
-if nixio.fs.access("/usr/bin/dnsforwarder") then
-o:value("3", translate("Use dnsforwarder tcp query and cache"))
-end
+o:value("0", translate("Use Local DNS Service listen port 5335"))
 o.default = 1
 
 o = s:option(ListValue, "tunnel_forward", translate("Anti-pollution DNS Server"))
@@ -107,30 +101,14 @@ o:value("1.1.1.1:53", translate("Cloudflare DNS (1.1.1.1)"))
 o:value("114.114.114.114:53", translate("Oversea Mode DNS-1 (114.114.114.114)"))
 o:value("114.114.115.115:53", translate("Oversea Mode DNS-2 (114.114.115.115)"))
 o:depends("pdnsd_enable", "1")
-o:depends("pdnsd_enable", "2")
-o:depends("pdnsd_enable", "3")
 
-o = s:option(Flag, "bt", translate("Kill BT"))
-o.default = 0
-o.rmempty = false
-o.description = translate("Prohibit downloading tool ports through proxy")
+o = s:option(Button,"google",translate("Google Connectivity"))
+o.value = translate("No Check") 
+o.template = "shadowsocksr/check"
 
-o = s:option(Value, "bt_port", translate("BT Port"))
-o.default = "1236:65535"
-o.rmempty = true
-o:depends("bt", "1")
-
-
-
-o = s:option(Button,"gfw_data",translate("GFW List Data"))
-o.rawhtml  = true
-o.template = "shadowsocksr/refresh"
-o.value =tostring(math.ceil(gfw_count)) .. " " .. translate("Records")
-
-o = s:option(Button,"ip_data",translate("China IP Data"))
-o.rawhtml  = true
-o.template = "shadowsocksr/refresh"
-o.value =ip_count .. " " .. translate("Records")
+o = s:option(Button,"baidu",translate("Baidu Connectivity")) 
+o.value = translate("No Check") 
+o.template = "shadowsocksr/check"
 
 o = s:option(Button,"check_port",translate("Check Server Port"))
 o.template = "shadowsocksr/checkport"

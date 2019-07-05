@@ -93,6 +93,12 @@ function act_status()
     luci.http.write_json(e)
 end
 
+function act_status()
+	local e={}
+	e.running=luci.sys.call("ps -w | grep ssr-retcp | grep -v grep >/dev/null")==0
+	luci.http.prepare_content("application/json")
+	luci.http.write_json(e)
+end
 function check_status()
 	local set ="/usr/bin/ssr-check www." .. luci.http.formvalue("set") .. ".com 80 3 1"
 	sret=luci.sys.call(set)
